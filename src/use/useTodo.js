@@ -32,7 +32,7 @@ export function useTodo() {
       const apiTodos = response.data.todos || []
      
     
-      const allTodos = [...apiTodos, ...testTodos]
+      const allTodos = [...apiTodos]
       setInLocalStorage(allTodos)
       state.todos.value = allTodos
     } catch (err) {
