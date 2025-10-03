@@ -1,32 +1,28 @@
 <template>
   <div class="min-h-screen py-4 px-2 sm:py-6 sm:px-4 md:py-8">
     <div class="max-w-4xl mx-auto px-2 sm:px-4">
-      <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mb-6 bg-gradient-to-r from-white/90 to-white/70 p-4 sm:p-6 rounded-lg shadow-lg">
+      <div
+        class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 mb-6 bg-gradient-to-r from-white/90 to-white/70 p-4 sm:p-6 rounded-lg shadow-lg">
         <h1 class="text-2xl sm:text-4xl font-bold text-blue-600 text-center sm:text-left">
-          Todo List
+          JoshuaTodos
         </h1>
-        <button
-          @click="isAddDialogOpen = true; console.log('Add button clicked, isAddDialogOpen:', isAddDialogOpen)"
+        <button @click="isAddDialogOpen = true; console.log('Add button clicked, isAddDialogOpen:', isAddDialogOpen)"
           :class="[
             'px-6 py-3 bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-medium rounded-lg shadow-lg hover:from-blue-600 hover:to-cyan-600 transition-all duration-200',
             isMobile ? 'w-full' : 'w-auto'
-          ]"
-        >
+          ]">
           Add Todo
         </button>
       </div>
 
-      
 
-      <SearchAndFilter
-        :onSearch="setSearchTerm"
-        :onFilter="setFilterStatus"
-      />
+
+      <SearchAndFilter :onSearch="setSearchTerm" :onFilter="setFilterStatus" />
 
       <div v-if="isLoading" class="flex justify-center items-center min-h-screen">
         <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
       </div>
-      
+
       <div v-else-if="error" class="max-w-4xl mx-auto mt-4 px-2">
         <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
           Error: {{ error.message }}
@@ -34,36 +30,27 @@
       </div>
 
       <div v-else>
-        <div v-if="filteredTodos.length === 0" class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 text-center rounded-lg shadow-lg">
+        <div v-if="filteredTodos.length === 0"
+          class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 text-center rounded-lg shadow-lg">
           <p class="text-gray-600">
             {{ emptyMessage }}
           </p>
         </div>
         <div v-else class="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden">
           <div class="divide-y divide-gray-200">
-            <TodoItem
-              v-for="todo in currentTodos"
-              :key="todo.id"
-              :todo="todo"
-              :onDelete="() => handleDeleteTodo(todo)"
-              :onToggle="handleToggleTodo"
-            />
+            <TodoItem v-for="todo in currentTodos" :key="todo.id" :todo="todo" :onDelete="() => handleDeleteTodo(todo)"
+              :onToggle="handleToggleTodo" />
           </div>
         </div>
 
         <div v-if="totalPages > 1" class="flex justify-center mt-6">
           <div class="flex space-x-1">
-            <button
-              v-for="pageNum in totalPages"
-              :key="pageNum"
-              @click="handlePageChange($event, pageNum)"
-              :class="[
+            <button v-for="pageNum in totalPages" :key="pageNum" @click="handlePageChange($event, pageNum)" :class="[
                 'px-3 py-2 rounded-md text-sm font-medium transition-colors',
                 page === pageNum
                   ? 'bg-blue-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-              ]"
-            >
+              ]">
               {{ pageNum }}
             </button>
           </div>
@@ -76,41 +63,29 @@
               <div class="bg-gradient-to-r from-blue-500 to-cyan-500 text-white font-semibold py-4 px-6 rounded-t-lg">
                 Add New Todo
               </div>
-              
+
               <div class="p-6">
                 <div>
                   <label for="todo-title" class="block text-sm font-medium text-gray-700 mb-2 text-left">
                     Todo Title
                   </label>
-                  <input
-                    id="todo-title"
-                    v-model="newTodoTitle"
-                    type="text"
-                    required
+                  <input id="todo-title" v-model="newTodoTitle" type="text" required
                     class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Enter todo title"
-                    @keyup.enter="handleAddTodo"
-                  />
+                    placeholder="Enter todo title" @keyup.enter="handleAddTodo" />
                 </div>
               </div>
-              
+
               <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
-                <button
-                  @click="isAddDialogOpen = false"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                <button @click="isAddDialogOpen = false"
+                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   Cancel
                 </button>
-                <button
-                  @click="handleAddTodo"
-                  :disabled="!newTodoTitle.trim()"
-                  :class="[
+                <button @click="handleAddTodo" :disabled="!newTodoTitle.trim()" :class="[
                     'px-4 py-2 text-sm font-medium rounded-md focus:outline-none focus:ring-2 shadow-lg',
                     newTodoTitle.trim() 
                       ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white hover:from-blue-600 hover:to-cyan-600 focus:ring-blue-500' 
                       : 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  ]"
-                >
+                  ]">
                   Add Todo
                 </button>
               </div>
@@ -125,24 +100,20 @@
               <div class="bg-gradient-to-r from-red-500 to-red-600 text-white font-semibold py-4 px-6 rounded-t-lg">
                 Confirm Delete
               </div>
-              
+
               <div class="p-6">
                 <p class="text-center font-semibold text-lg text-gray-900">
                   Are you sure you want to delete "{{ todoToDelete?.todo }}"?
                 </p>
               </div>
-              
+
               <div class="px-6 py-4 bg-gray-50 rounded-b-lg flex justify-end space-x-3">
-                <button
-                  @click="showDeleteModal = false"
-                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
+                <button @click="showDeleteModal = false"
+                  class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500">
                   Cancel
                 </button>
-                <button
-                  @click="handleDeleteConfirm"
-                  class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 rounded-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-lg"
-                >
+                <button @click="handleDeleteConfirm"
+                  class="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-500 to-red-600 rounded-md hover:from-red-600 hover:to-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 shadow-lg">
                   Delete
                 </button>
               </div>
